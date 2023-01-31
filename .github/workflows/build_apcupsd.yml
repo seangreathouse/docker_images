@@ -8,8 +8,8 @@ on:
     branches: ['apcupsd']
     # branches: ['main']
     paths:
-      - 'docker_images/cloudflared/**'
-      - '.github/workflows/build_cloudflared.yml'
+      - 'docker_images/apcupsd/**'
+      - '.github/workflows/build_apcupsd.yml'
 
 env:
   REGISTRY: ghcr.io
