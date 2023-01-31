@@ -35,9 +35,6 @@ jobs:
         run: echo ${{ env.APCUPSD_CURRENT_VERSION }}
     outputs:
       APCUPSD_CURRENT_VERSION: ${{ env.APCUPSD_CURRENT_VERSION }}
-    # https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/x86_64/apcupsd-3.14.14-r3.apk
-    # FULL_APK=`curl --silent https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/x86_64/ |egrep -o 'apcupsd-[0-9].*' |awk -F '[<>]' '{print $2}'`
-    # APCUPSD_VERSION=`echo $FULL_APK |sed -nr 's/(apcupsd-)(.*)(.apk)/\2/p`
 
   # check-image-version:
   #   if: always()
@@ -122,18 +119,15 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            ${{env.GITHUB_REF_NAME}}
+            ${GIT_BRANCH}
             ${{ env.APCUPSD_CURRENT_VERSION }}
-            ${{ env.DOCKER_FROM }}
             # set latest tag for main branch
             type=raw,value=latest,enable={{is_default_branch}} 
-          # ${{ env.APCUPSD_CURRENT_VERSION }}
-          # ${{ env.DOCKER_FROM }}
           labels: |
             base_image=${{ env.DOCKER_FROM }}
             org.opencontainers.image.url=https://github.com/${{ env.IMAGE_NAME }}
             org.opencontainers.image.source=https://github.com/${{ env.IMAGE_NAME }}
-          # cloudflared_version=${{ env.APCUPSD_CURRENT_VERSION }}
+            apcupsd_version=${{ env.APCUPSD_CURRENT_VERSION }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@master 
