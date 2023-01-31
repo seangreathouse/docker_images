@@ -119,7 +119,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            ${GIT_BRANCH}
+            ${GITHUB_REF##*/}}
             ${{ env.APCUPSD_CURRENT_VERSION }}
             # set latest tag for main branch
             type=raw,value=latest,enable={{is_default_branch}} 
