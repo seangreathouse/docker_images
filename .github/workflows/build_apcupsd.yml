@@ -5,7 +5,7 @@ on:
   #   - cron:  '0 17 * * *' 
   # workflow_call:
   push:
-    branches: ${{GITHUB_REF_NAME}}
+    # branches: ${{GITHUB_REF_NAME}}
     # branches: ['main']
     paths:
       - 'docker_images/apcupsd/**'
@@ -117,7 +117,7 @@ jobs:
           tags: |
             # set latest tag for main branch
             type=raw,value=${{GITHUB_REF_NAME}}
-          # type=raw,value=latest,enable={{is_default_branch}} 
+            type=raw,value=latest,enable={{is_default_branch}} 
           # ${{ env.CLOUDFLARED_CURRENT_VERSION }}
           # ${{ env.DOCKER_FROM }}
           labels: |
