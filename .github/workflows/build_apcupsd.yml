@@ -1,4 +1,4 @@
-name: Create and publish cloudflared Debian Docker image
+name: Create and publish apcupsd Alpine Docker image
 
 on:
   schedule:
@@ -115,10 +115,10 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            ${{ env.CLOUDFLARED_CURRENT_VERSION }}
-            ${{ env.DOCKER_FROM }}
             # set latest tag for main branch
             type=raw,value=latest,enable={{is_default_branch}} 
+          # ${{ env.CLOUDFLARED_CURRENT_VERSION }}
+          # ${{ env.DOCKER_FROM }}
           labels: |
             base_image=${{ env.DOCKER_FROM }}
             org.opencontainers.image.url=https://github.com/${{ env.IMAGE_NAME }}
