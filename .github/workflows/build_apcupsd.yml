@@ -26,8 +26,9 @@ jobs:
       - name: Get apcupsd current version
         id: get_APCUPSD_CURRENT_VERSION
         run: |
-          echo APCUPSD_CURRENT_APK=$(curl --silent https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/x86_64/ |egrep -o 'apcupsd-[0-9].*' |awk -F '[<>]' '{print $2}') >> $GITHUB_ENV
-          echo APCUPSD_CURRENT_VERSION=$(echo ${{env.APCUPSD_CURRENT_APK}} ||sed -nr 's/(apcupsd-)(.*)(.apk)/\2/p' ) >> $GITHUB_ENV
+          APCUPSD_CURRENT_APK=`curl --silent https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/x86_64/ |egrep -o 'apcupsd-[0-9].*' |awk -F '[<>]' '{print $2}'`
+          echo APCUPSD_CURRENT_APK=$APCUPSD_CURRENT_APK >> $GITHUB_ENV
+          echo APCUPSD_CURRENT_VERSION=$(echo $APCUPSD_CURRENT_APK |sed -nr 's/(apcupsd-)(.*)(.apk)/\2/p' ) >> $GITHUB_ENV
 
       - name: Echo apcupsd current version
         id: echo_APCUPSD_CURRENT_VERSION
