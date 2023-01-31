@@ -17,22 +17,26 @@ env:
   DOCKER_FROM: 'alpine'
 
 jobs:
-  # check-latest-version:
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     contents: read
-  #     packages: write
-  #   steps:
-  #     - name: Get cloudflared current version
-  #       id: get_CLOUDFLARED_CURRENT_VERSION
-  #       run: |
-  #         echo CLOUDFLARED_CURRENT_VERSION=$(curl -s --head https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb |egrep 'location:' |egrep -o [0-9]{4}\.[0-9]+\.[0-9]+) >> $GITHUB_ENV
+  check-latest-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Get apcupsd current version
+        id: get_APCUPSD_CURRENT_VERSION
+        run: |
+          echo APCUPSD_CURRENT_APK=$(curl --silent https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/x86_64/ |egrep -o 'apcupsd-[0-9].*' |awk -F '[<>]' '{print $2}') >> $GITHUB_ENV
+          echo APCUPSD_CURRENT_VERSION=$(echo env.APCUPSD_CURRENT_APK ||sed -nr 's/(apcupsd-)(.*)(.apk)/\2/p ) >> $GITHUB_ENV
 
-  #     - name: Echo cloudflared current version
-  #       id: echo_CLOUDFLARED_CURRENT_VERSION
-  #       run: echo ${{ env.CLOUDFLARED_CURRENT_VERSION }}
-  #   outputs:
-  #     CLOUDFLARED_CURRENT_VERSION: ${{ env.CLOUDFLARED_CURRENT_VERSION }}
+      - name: Echo apcupsd current version
+        id: echo_APCUPSD_CURRENT_VERSION
+        run: echo ${{ env.APCUPSD_CURRENT_VERSION }}
+    outputs:
+      APCUPSD_CURRENT_VERSION: ${{ env.APCUPSD_CURRENT_VERSION }}
+    # https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/x86_64/apcupsd-3.14.14-r3.apk
+    # FULL_APK=`curl --silent https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/x86_64/ |egrep -o 'apcupsd-[0-9].*' |awk -F '[<>]' '{print $2}'`
+    # APCUPSD_VERSION=`echo $FULL_APK |sed -nr 's/(apcupsd-)(.*)(.apk)/\2/p`
 
   # check-image-version:
   #   if: always()
@@ -67,8 +71,10 @@ jobs:
   #   outputs:
   #     CLOUDFLARED_IMAGE_VERSION: ${{ env.CLOUDFLARED_IMAGE_VERSION }}
 
+
   build-and-push-image:
     # if: ${{ always() }}
+    needs: [check-latest-version]
     # needs: [check-latest-version, check-image-version]
     runs-on: ubuntu-latest
     permissions:
@@ -76,21 +82,21 @@ jobs:
       packages: write
 
     steps:
-      # - name: Set cloudflared versions
-      #   id: set-local-env
-      #   run: |
-      #     echo CLOUDFLARED_CURRENT_VERSION=${{ needs.check-latest-version.outputs.CLOUDFLARED_CURRENT_VERSION }} >> $GITHUB_ENV
-      #     echo CLOUDFLARED_IMAGE_VERSION=${{ needs.check-image-version.outputs.CLOUDFLARED_IMAGE_VERSION }} >> $GITHUB_ENV
+      - name: Set cloudflared versions
+        id: set-local-env
+        run: |
+          echo APCUPSD_CURRENT_VERSION=${{ needs.check-latest-version.outputs.APCUPSD_CURRENT_VERSION }} >> $GITHUB_ENV
+          # echo CLOUDFLARED_IMAGE_VERSION=${{ needs.check-image-version.outputs.CLOUDFLARED_IMAGE_VERSION }} >> $GITHUB_ENV
 
       # - name: Echo cloudflared versions
       #   id: echo-cloudflared-versions
       #   run: |
-      #     echo Current version: ${{ env.CLOUDFLARED_CURRENT_VERSION }}
+      #     echo Current version: ${{ env.APCUPSD_CURRENT_VERSION }}
       #     echo Image version: ${{ env.CLOUDFLARED_IMAGE_VERSION }}
 
       - name: Log in to the Container registry
         uses: docker/login-action@master
-        # if: ${{ env.CLOUDFLARED_CURRENT_VERSION != env.CLOUDFLARED_IMAGE_VERSION }}
+        # if: ${{ env.APCUPSD_CURRENT_VERSION != env.CLOUDFLARED_IMAGE_VERSION }}
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -98,38 +104,39 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@master
-        # if: ${{ env.CLOUDFLARED_CURRENT_VERSION != env.CLOUDFLARED_IMAGE_VERSION }}
+        # if: ${{ env.APCUPSD_CURRENT_VERSION != env.CLOUDFLARED_IMAGE_VERSION }}
         
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@master
-        # if: ${{ env.CLOUDFLARED_CURRENT_VERSION != env.CLOUDFLARED_IMAGE_VERSION }}
+        # if: ${{ env.APCUPSD_CURRENT_VERSION != env.CLOUDFLARED_IMAGE_VERSION }}
 
       - name: Checkout repository
         uses: actions/checkout@master
-        # if: ${{ env.CLOUDFLARED_CURRENT_VERSION != env.CLOUDFLARED_IMAGE_VERSION }}
+        # if: ${{ env.APCUPSD_CURRENT_VERSION != env.CLOUDFLARED_IMAGE_VERSION }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@master
-        # if: ${{ env.CLOUDFLARED_CURRENT_VERSION != env.CLOUDFLARED_IMAGE_VERSION }}
+        # if: ${{ env.APCUPSD_CURRENT_VERSION != env.CLOUDFLARED_IMAGE_VERSION }}
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             ${{env.GITHUB_REF_NAME}}
+            ${{ env.APCUPSD_CURRENT_VERSION }}
+            ${{ env.DOCKER_FROM }}
             # set latest tag for main branch
-            type=raw,value=${{env.GITHUB_REF_NAME}}
             type=raw,value=latest,enable={{is_default_branch}} 
-          # ${{ env.CLOUDFLARED_CURRENT_VERSION }}
+          # ${{ env.APCUPSD_CURRENT_VERSION }}
           # ${{ env.DOCKER_FROM }}
           labels: |
             base_image=${{ env.DOCKER_FROM }}
             org.opencontainers.image.url=https://github.com/${{ env.IMAGE_NAME }}
             org.opencontainers.image.source=https://github.com/${{ env.IMAGE_NAME }}
-          # cloudflared_version=${{ env.CLOUDFLARED_CURRENT_VERSION }}
+          # cloudflared_version=${{ env.APCUPSD_CURRENT_VERSION }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@master 
-        # if: ${{ env.CLOUDFLARED_CURRENT_VERSION != env.CLOUDFLARED_IMAGE_VERSION }}
+        # if: ${{ env.APCUPSD_CURRENT_VERSION != env.CLOUDFLARED_IMAGE_VERSION }}
         with:
           platforms: linux/amd64,linux/arm64
           context: "{{defaultContext}}:apcupsd"
