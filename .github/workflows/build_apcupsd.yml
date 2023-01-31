@@ -32,7 +32,9 @@ jobs:
 
       - name: Echo apcupsd current version
         id: echo_APCUPSD_CURRENT_VERSION
-        run: echo ${{ env.APCUPSD_CURRENT_VERSION }}
+        run: |
+          echo ${{ env.APCUPSD_CURRENT_VERSION }}
+          echo ${GITHUB_REF}
     outputs:
       APCUPSD_CURRENT_VERSION: ${{ env.APCUPSD_CURRENT_VERSION }}
 
@@ -119,7 +121,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            ${GITHUB_REF##*/}}
+            ${GITHUB_REF}
             ${{ env.APCUPSD_CURRENT_VERSION }}
             # set latest tag for main branch
             type=raw,value=latest,enable={{is_default_branch}} 
