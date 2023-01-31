@@ -1,11 +1,11 @@
 name: Create and publish apcupsd Alpine Docker image
 
 on:
-  schedule:
-    - cron:  '0 17 * * *' 
+  # schedule:
+  #   - cron:  '0 17 * * *' 
   # workflow_call:
   push:
-    branches: ['apcupsd']
+    branches: ${{GITHUB_REF_NAME}}
     # branches: ['main']
     paths:
       - 'docker_images/apcupsd/**'
@@ -115,9 +115,8 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            1.0.0
             # set latest tag for main branch
-            type=raw,value=latest,enable 
+            type=raw,value=${{GITHUB_REF_NAME}}
           # type=raw,value=latest,enable={{is_default_branch}} 
           # ${{ env.CLOUDFLARED_CURRENT_VERSION }}
           # ${{ env.DOCKER_FROM }}
