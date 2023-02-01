@@ -75,7 +75,7 @@ jobs:
 
   build-and-push-image:
     if: ${{ always() }}
-    needs: [check-latest-version]
+    # needs: [check-latest-version]
     needs: [check-latest-version, check-image-version]
     runs-on: ubuntu-latest
     permissions:
