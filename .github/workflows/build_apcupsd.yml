@@ -8,7 +8,7 @@ on:
     # branches: ${{ github.ref_name }} 
     paths:
       - 'docker_images/apcupsd/**'
-      - '.github/workflows/build_apcupsd.yml'
+      - '.github/workflows/build_apcupsd.yml' 
 
 env:
   REGISTRY: ghcr.io
