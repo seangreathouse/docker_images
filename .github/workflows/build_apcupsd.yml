@@ -57,6 +57,7 @@ jobs:
 
       - name: Pull apcupsd image
         id: apcupsd_image_pull
+        continue-on-error: true
         run: |
           docker pull ghcr.io/${{ env.IMAGE_NAME }}:${{ env.GIT_BRANCH }}
 
@@ -124,7 +125,6 @@ jobs:
           tags: |
             ${{ env.GIT_BRANCH }}
             ${{ env.APCUPSD_CURRENT_VERSION }}
-            ${{ env.DOCKER_FROM }}
             # set latest tag for main branch
             type=raw,value=latest,enable={{is_default_branch}} 
           labels: |
