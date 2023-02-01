@@ -5,7 +5,7 @@ on:
   #   - cron:  '0 17 * * *' 
   # workflow_call:
   push:
-    # branches: ${{ github.ref_name }}
+    # branches: ${{ github.ref_name }} 
     paths:
       - 'docker_images/apcupsd/**'
       - '.github/workflows/build_apcupsd.yml'
