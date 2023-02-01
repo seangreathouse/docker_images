@@ -5,8 +5,7 @@ on:
   #   - cron:  '0 17 * * *' 
   # workflow_call:
   push:
-    # branches: ${{GITHUB_REF_NAME}}
-    # branches: ['main']
+    branches: ${{ github.ref_name }}
     paths:
       - 'docker_images/apcupsd/**'
       - '.github/workflows/build_apcupsd.yml'
@@ -16,7 +15,6 @@ env:
   IMAGE_NAME: ${{ github.repository }}/apcupsd  
   DOCKER_FROM: 'alpine'
   GIT_BRANCH: ${{ github.ref_name }}
-  GIT_BRANCH2: ${GITHUB_REF##*/}
 
 jobs:
   check-latest-version:
@@ -37,69 +35,69 @@ jobs:
         run: |
           echo ${{ env.APCUPSD_CURRENT_VERSION }}
           echo ${{ env.GIT_BRANCH }}
-          echo ${{ env.GIT_BRANCH2 }}
+
     outputs:
       APCUPSD_CURRENT_VERSION: ${{ env.APCUPSD_CURRENT_VERSION }}
 
-  # check-image-version:
-  #   if: always()
-  #   needs: check-latest-version
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     contents: read
-  #     packages: write
-
-  #   steps:
-  #     - name: Log in to the Container registry
-  #       uses: docker/login-action@master
-  #       with:
-  #         registry: ${{ env.REGISTRY }}
-  #         username: ${{ github.actor }}
-  #         password: ${{ secrets.GITHUB_TOKEN }}
-
-  #     - name: Pull cloudflared image
-  #       id: cloudflared_image_pull
-  #       run: |
-  #         docker pull ghcr.io/${{ env.IMAGE_NAME }}
-
-  #     - name: Get image cloudflared version
-  #       id: CLOUDFLARED_IMAGE_VERSION
-  #       run: |
-  #         echo CLOUDFLARED_IMAGE_VERSION=$(docker inspect ghcr.io/${{ env.IMAGE_NAME }} |egrep cloudflared_version | cut -d '"' -f 4) >> $GITHUB_ENV
-
-  #     - name: Echo cloudflared image version
-  #       id: echo_CLOUDFLARED_IMAGE_VERSION
-  #       run: echo ${{ env.CLOUDFLARED_IMAGE_VERSION }}
-
-  #   outputs:
-  #     CLOUDFLARED_IMAGE_VERSION: ${{ env.CLOUDFLARED_IMAGE_VERSION }}
-
-
-  build-and-push-image:
-    # if: ${{ always() }}
-    needs: [check-latest-version]
-    # needs: [check-latest-version, check-image-version]
+  check-image-version:
+    if: always()
+    # needs: check-latest-version
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
 
     steps:
-      - name: Set cloudflared versions
+      - name: Log in to the Container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull apcupsd image
+        id: apcupsd_image_pull
+        run: |
+          docker pull ghcr.io/${{ env.IMAGE_NAME }}
+
+      - name: Get image apcupsd version
+        id: APCUPSD_IMAGE_VERSION
+        run: |
+          echo APCUPSD_IMAGE_VERSION=$(docker inspect ghcr.io/${{ env.IMAGE_NAME }} |egrep apcupsd_version | cut -d '"' -f 4) >> $GITHUB_ENV
+
+      - name: Echo cloudflared image version
+        id: echo_APCUPSD_IMAGE_VERSION
+        run: echo ${{ env.APCUPSD_IMAGE_VERSION }}
+
+    outputs:
+      APCUPSD_IMAGE_VERSION: ${{ env.APCUPSD_IMAGE_VERSION }}
+
+
+  build-and-push-image:
+    if: ${{ always() }}
+    needs: [check-latest-version]
+    needs: [check-latest-version, check-image-version]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Set apcupsd versions
         id: set-local-env
         run: |
           echo APCUPSD_CURRENT_VERSION=${{ needs.check-latest-version.outputs.APCUPSD_CURRENT_VERSION }} >> $GITHUB_ENV
-          # echo CLOUDFLARED_IMAGE_VERSION=${{ needs.check-image-version.outputs.CLOUDFLARED_IMAGE_VERSION }} >> $GITHUB_ENV
+          echo APCUPSD_IMAGE_VERSION=${{ needs.check-image-version.outputs.APCUPSD_IMAGE_VERSION }} >> $GITHUB_ENV
 
-      # - name: Echo cloudflared versions
-      #   id: echo-cloudflared-versions
-      #   run: |
-      #     echo Current version: ${{ env.APCUPSD_CURRENT_VERSION }}
-      #     echo Image version: ${{ env.CLOUDFLARED_IMAGE_VERSION }}
+      - name: Echo apcupsd versions
+        id: echo-apcupsd-versions
+        run: |
+          echo Current version: ${{ env.APCUPSD_CURRENT_VERSION }}
+          echo Image version: ${{ env.APCUPSD_IMAGE_VERSION }}
 
       - name: Log in to the Container registry
         uses: docker/login-action@master
-        # if: ${{ env.APCUPSD_CURRENT_VERSION != env.CLOUDFLARED_IMAGE_VERSION }}
+        if: ${{ env.APCUPSD_CURRENT_VERSION != env.APCUPSD_IMAGE_VERSION }}
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -107,20 +105,20 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@master
-        # if: ${{ env.APCUPSD_CURRENT_VERSION != env.CLOUDFLARED_IMAGE_VERSION }}
+        if: ${{ env.APCUPSD_CURRENT_VERSION != env.APCUPSD_IMAGE_VERSION }}
         
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@master
-        # if: ${{ env.APCUPSD_CURRENT_VERSION != env.CLOUDFLARED_IMAGE_VERSION }}
+        if: ${{ env.APCUPSD_CURRENT_VERSION != env.APCUPSD_IMAGE_VERSION }}
 
       - name: Checkout repository
         uses: actions/checkout@master
-        # if: ${{ env.APCUPSD_CURRENT_VERSION != env.CLOUDFLARED_IMAGE_VERSION }}
+        if: ${{ env.APCUPSD_CURRENT_VERSION != env.APCUPSD_IMAGE_VERSION }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@master
-        # if: ${{ env.APCUPSD_CURRENT_VERSION != env.CLOUDFLARED_IMAGE_VERSION }}
+        if: ${{ env.APCUPSD_CURRENT_VERSION != env.APCUPSD_IMAGE_VERSION }}
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
@@ -136,7 +134,7 @@ jobs:
 
       - name: Build and push Docker image
         uses: docker/build-push-action@master 
-        # if: ${{ env.APCUPSD_CURRENT_VERSION != env.CLOUDFLARED_IMAGE_VERSION }}
+        if: ${{ env.APCUPSD_CURRENT_VERSION != env.APCUPSD_IMAGE_VERSION }}
         with:
           platforms: linux/amd64,linux/arm64
           context: "{{defaultContext}}:apcupsd"
