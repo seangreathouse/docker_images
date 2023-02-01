@@ -9,5 +9,6 @@ RUN apk update && apk add --no-cache apcupsd
 VOLUME [ "/etc/apcupsd", "/var/log/apcupsd" ]
 
 LABEL org.opencontainers.image.source https://github.com/seangreathouse/docker_images/apcupsd
+LABEL docker_from alpine:latest
 # CMD [ "/sbin/apcupsd", "-b" ]
 ENTRYPOINT [ "/sbin/apcupsd", "-b" ]

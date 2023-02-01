@@ -76,7 +76,6 @@ jobs:
 
   build-and-push-image:
     if: ${{ always() }}
-    # needs: [check-latest-version] 
     needs: [check-latest-version, check-image-version]
     runs-on: ubuntu-latest 
     permissions:
@@ -95,6 +94,7 @@ jobs:
         run: |
           echo Current version: ${{ env.APCUPSD_CURRENT_VERSION }}
           echo Image version: ${{ env.APCUPSD_IMAGE_VERSION }}
+          echo Doecker from: ${{ env.DOCKER_FROM }}
 
       - name: Log in to the Container registry
         uses: docker/login-action@master
@@ -124,12 +124,12 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             ${{ env.GIT_BRANCH }}
-            ${{ env.APCUPSD_CURRENT_VERSION }}
             ${{ env.DOCKER_FROM }}
+            ${{ env.APCUPSD_CURRENT_VERSION }}
             # set latest tag for main branch
             type=raw,value=latest,enable={{is_default_branch}} 
           labels: |
-            base_image=${{ env.DOCKER_FROM }}
+            # base_image=${{ env.DOCKER_FROM }}
             org.opencontainers.image.url=https://github.com/${{ env.IMAGE_NAME }}
             org.opencontainers.image.source=https://github.com/${{ env.IMAGE_NAME }}
             apcupsd_version=${{ env.APCUPSD_CURRENT_VERSION }}
