@@ -63,7 +63,7 @@ jobs:
       - name: Get image apcupsd version
         id: APCUPSD_IMAGE_VERSION
         run: |
-          echo APCUPSD_IMAGE_VERSION=$(docker inspect ghcr.io/${{ env.IMAGE_NAME }} |egrep apcupsd_version | cut -d '"' -f 4) >> $GITHUB_ENV
+          echo APCUPSD_IMAGE_VERSION=$(docker inspect ghcr.io/${{ env.IMAGE_NAME }}:${{ env.GIT_BRANCH }} |egrep apcupsd_version | cut -d '"' -f 4) >> $GITHUB_ENV
 
       - name: Echo cloudflared image version
         id: echo_APCUPSD_IMAGE_VERSION
