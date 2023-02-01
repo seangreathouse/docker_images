@@ -1,7 +1,7 @@
 name: Create and publish apcupsd Alpine Docker image
 
 on:
-  # schedule:
+  # schedule: 
   #   - cron:  '0 17 * * *' 
   # workflow_call:
   push:
