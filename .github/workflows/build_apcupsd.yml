@@ -1,0 +1,146 @@
+name: Create and publish apcupsd Alpine Docker image
+
+on:
+  # schedule:
+  #   - cron:  '0 17 * * *' 
+  # workflow_call:
+  push:
+    # branches: ${{ github.ref_name }} 
+    paths:
+      - 'docker_images/apcupsd/**'
+      - '.github/workflows/build_apcupsd.yml'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}/apcupsd  
+  DOCKER_FROM: 'alpine'
+  GIT_BRANCH: ${{ github.ref_name }}
+
+jobs:
+  check-latest-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Get apcupsd current version
+        id: get_APCUPSD_CURRENT_VERSION
+        run: |
+          APCUPSD_CURRENT_APK=`curl --silent https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/x86_64/ |egrep -o 'apcupsd-[0-9].*' |awk -F '[<>]' '{print $2}'`
+          echo APCUPSD_CURRENT_APK=$APCUPSD_CURRENT_APK >> $GITHUB_ENV
+          echo APCUPSD_CURRENT_VERSION=$(echo $APCUPSD_CURRENT_APK |sed -nr 's/(apcupsd-)(.*)(.apk)/\2/p' ) >> $GITHUB_ENV
+
+      - name: Echo apcupsd current version
+        id: echo_APCUPSD_CURRENT_VERSION
+        run: |
+          echo ${{ env.APCUPSD_CURRENT_VERSION }}
+          echo ${{ env.GIT_BRANCH }}
+
+    outputs:
+      APCUPSD_CURRENT_VERSION: ${{ env.APCUPSD_CURRENT_VERSION }}
+
+  check-image-version:
+    if: always()
+    # needs: check-latest-version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Log in to the Container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull apcupsd image
+        id: apcupsd_image_pull
+        continue-on-error: true
+        run: |
+          docker pull ghcr.io/${{ env.IMAGE_NAME }}:${{ env.GIT_BRANCH }}
+
+      - name: Get image apcupsd version
+        id: APCUPSD_IMAGE_VERSION
+        run: |
+          echo APCUPSD_IMAGE_VERSION=$(docker inspect ghcr.io/${{ env.IMAGE_NAME }}:${{ env.GIT_BRANCH }} |egrep apcupsd_version | cut -d '"' -f 4) >> $GITHUB_ENV
+
+      - name: Echo cloudflared image version
+        id: echo_APCUPSD_IMAGE_VERSION
+        run: echo ${{ env.APCUPSD_IMAGE_VERSION }}
+
+    outputs:
+      APCUPSD_IMAGE_VERSION: ${{ env.APCUPSD_IMAGE_VERSION }}
+
+
+  build-and-push-image:
+    if: ${{ always() }}
+    needs: [check-latest-version, check-image-version]
+    runs-on: ubuntu-latest 
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Set apcupsd versions
+        id: set-local-env
+        run: |
+          echo APCUPSD_CURRENT_VERSION=${{ needs.check-latest-version.outputs.APCUPSD_CURRENT_VERSION }} >> $GITHUB_ENV
+          echo APCUPSD_IMAGE_VERSION=${{ needs.check-image-version.outputs.APCUPSD_IMAGE_VERSION }} >> $GITHUB_ENV
+
+      - name: Echo apcupsd versions
+        id: echo-apcupsd-versions
+        run: |
+          echo Current version: ${{ env.APCUPSD_CURRENT_VERSION }}
+          echo Image version: ${{ env.APCUPSD_IMAGE_VERSION }}
+          echo Doecker from: ${{ env.DOCKER_FROM }}
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@master
+        if: ${{ env.APCUPSD_CURRENT_VERSION != env.APCUPSD_IMAGE_VERSION }}
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@master
+        if: ${{ env.APCUPSD_CURRENT_VERSION != env.APCUPSD_IMAGE_VERSION }}
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@master
+        if: ${{ env.APCUPSD_CURRENT_VERSION != env.APCUPSD_IMAGE_VERSION }}
+
+      - name: Checkout repository
+        uses: actions/checkout@master
+        if: ${{ env.APCUPSD_CURRENT_VERSION != env.APCUPSD_IMAGE_VERSION }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@master
+        if: ${{ env.APCUPSD_CURRENT_VERSION != env.APCUPSD_IMAGE_VERSION }}
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            ${{ env.DOCKER_FROM }}
+            ${{ env.GIT_BRANCH }}
+            ${{ env.APCUPSD_CURRENT_VERSION }}
+            # set latest tag for main branch
+            type=raw,value=latest,enable={{is_default_branch}} 
+          labels: |
+            # base_image=${{ env.DOCKER_FROM }}
+            org.opencontainers.image.url=https://github.com/${{ env.IMAGE_NAME }}
+            org.opencontainers.image.source=https://github.com/${{ env.IMAGE_NAME }}
+            apcupsd_version=${{ env.APCUPSD_CURRENT_VERSION }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@master 
+        if: ${{ env.APCUPSD_CURRENT_VERSION != env.APCUPSD_IMAGE_VERSION }}
+        with:
+          platforms: linux/amd64,linux/arm64
+          context: "{{defaultContext}}:apcupsd"
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+ 
