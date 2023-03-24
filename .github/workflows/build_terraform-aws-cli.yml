@@ -12,9 +12,9 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/apcupsd  
+  IMAGE_NAME: ${{ github.repository }}/terraform-aws-cli  
   PROJECT_NAME: terraform-aws-cli  
-  DOCKER_FROM: 'alpine'
+  DOCKER_FROM: 'debian:bullseye-slim'
   GIT_BRANCH: ${{ github.ref_name }}
 
 jobs:
