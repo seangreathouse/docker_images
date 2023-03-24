@@ -8,7 +8,7 @@
 #     -v ${PWD}:/workspace ghcr.io/seangreathouse/docker_images/terraform-aws-cli:latest
 
 
-# Setup build arguments
+# Setup build arguments 
 # ARG AWS_CLI_VERSION
 ARG TERRAFORM_VERSION=1.4.2
 ARG PYTHON_MAJOR_VERSION=3.9
