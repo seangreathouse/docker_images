@@ -5,7 +5,7 @@ on:
   #   - cron:  '0 17 * * *' 
   workflow_dispatch:
   push:
-    # branches: ${{ github.ref_name }} 
+    # branches: ${{ github.ref_name }}  ## < this is broken
     paths:
       - 'docker_images/terraform-aws-cli/**'
       - '.github/workflows/build_terraform-aws-cli.yml'  
@@ -20,7 +20,6 @@ env:
 jobs:
   build-and-push-image:
     if: ${{ always() }}
-    needs: [check-latest-version, check-image-version]
     runs-on: ubuntu-latest 
     permissions:
       contents: read
