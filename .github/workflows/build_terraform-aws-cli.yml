@@ -18,12 +18,12 @@ env:
   GIT_BRANCH: ${{ github.ref_name }}
 
 jobs:
-  check-latest-version:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
+  # check-latest-version:
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     packages: write
+  #   steps:
       # - name: Get apcupsd current version
       #   id: get_APCUPSD_CURRENT_VERSION
       #   run: |
