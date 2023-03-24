@@ -8,7 +8,7 @@ on:
     branches: ${{ github.ref_name }} 
     paths:
       - 'docker_images/terraform-aws-cli/**'
-      - '.github/workflows/build_terraform-aws-cli.yml' 
+      - '.github/workflows/build_terraform-aws-cli.yml'  
 
 env:
   REGISTRY: ghcr.io
