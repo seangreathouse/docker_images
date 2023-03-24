@@ -3,7 +3,7 @@ name: Create and publish terraform-aws-cli Docker image
 on:
   # schedule:
   #   - cron:  '0 17 * * *' 
-  workflow_call:
+  workflow_dispatch:
   push:
     branches: ${{ github.ref_name }} 
     paths:
