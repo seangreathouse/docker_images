@@ -13,7 +13,7 @@ RUN \
   rm -rf awscliv2.zip aws
 RUN
   # https://releases.hashicorp.com/terraform/
-  TARGETVERSION="1.4.6" && \
+  export TARGETVERSION="1.4.6" && \
   case ${TARGETPLATFORM} in \
     "linux/amd64")  DOWNLOAD_ARCH="amd64"  ;; \
     "linux/arm64") DOWNLOAD_ARCH="arm64"  ;; \
