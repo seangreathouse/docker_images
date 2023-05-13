@@ -13,7 +13,7 @@ RUN \
   unzip awscliv2.zip && \
   sudo ./aws/install && \
   rm -rf awscliv2.zip aws
-RUN 
+RUN \
   # case ${TARGETPLATFORM} in \
   #   "linux/amd64")  DOWNLOAD_ARCH="amd64"  ;; \
   #   "linux/arm64") DOWNLOAD_ARCH="arm64"  ;; \

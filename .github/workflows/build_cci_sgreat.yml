@@ -9,7 +9,7 @@ on:
     paths:
       - 'docker_images/cci_sgreat/**'
       - '.github/workflows/build_cci_sgreat.yml'
-      
+    
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/cci_sgreat  
