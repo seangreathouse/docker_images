@@ -20,5 +20,5 @@ RUN \
   esac && \
   curl "https://releases.hashicorp.com/terraform/1.4.6/terraform_${TERRAFORM_VERSION}_linux_${DOWNLOAD_ARCH}.zip" -o "terraform.zip" && \
   unzip terraform.zip && \
-  cp terraform /usr/bin && \
-  rm -rf terraform.zip terraform
+  mv terraform /usr/bin/ && \
+  rm terraform.zip 
