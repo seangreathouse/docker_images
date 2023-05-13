@@ -13,11 +13,11 @@ RUN \
   unzip awscliv2.zip && \
   sudo ./aws/install && \
   rm -rf awscliv2.zip aws
-RUN \
-  case ${TARGETPLATFORM} in \
-    "linux/amd64")  DOWNLOAD_ARCH="amd64"  ;; \
-    "linux/arm64") DOWNLOAD_ARCH="arm64"  ;; \
-  esac && \
+RUN 
+  # case ${TARGETPLATFORM} in \
+  #   "linux/amd64")  DOWNLOAD_ARCH="amd64"  ;; \
+  #   "linux/arm64") DOWNLOAD_ARCH="arm64"  ;; \
+  # esac && \
   curl "https://releases.hashicorp.com/terraform/1.4.6/terraform_1.4.6_linux_amd64.zip" -o "terraform.zip" && \
   # curl "https://releases.hashicorp.com/terraform/1.4.6/terraform_${TERRAFORM_VERSION}_linux_${DOWNLOAD_ARCH}.zip" -o "terraform.zip" && \
   # unzip terraform.zip && \
