@@ -16,13 +16,13 @@ env:
   IMAGE_NAME: ${{ github.repository }}/cci_aws  
   DOCKER_FROM: 'cimg/base:current '
 
-# jobs:
-#   check-latest-version:
-#     runs-on: ubuntu-latest
-#     permissions:
-#       contents: read
-#       packages: write
-#     steps:
+jobs:
+  # check-latest-version:
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     packages: write
+  #   steps:
 #       - name: Get cloudflared current version
 #         id: get_CLOUDFLARED_CURRENT_VERSION
 #         run: |
