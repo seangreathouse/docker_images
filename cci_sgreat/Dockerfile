@@ -29,9 +29,8 @@ RUN \
     "linux/amd64")  DOWNLOAD_ARCH="amd64"  ;; \
     "linux/arm64") DOWNLOAD_ARCH="arm64"  ;; \
   esac && \
-
-  curl -LO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/${DOWNLOAD_ARCH/kubectl" 
-  # sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
+  curl -LO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/${DOWNLOAD_ARCH}/kubectl" && \
+  sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl 
   # kubectl version --client
 
 
