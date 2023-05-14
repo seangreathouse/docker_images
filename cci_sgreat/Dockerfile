@@ -1,10 +1,14 @@
 FROM cimg/base:current 
 #Ubuntu 22.04.2 LTS (Focal Fossa)
-# https://releases.hashicorp.com/terraform/
+
 ARG TARGETPLATFORM
+# https://releases.hashicorp.com/terraform/
 ARG TERRAFORM_VERSION="1.4.6"
 ARG KUBECTL_VERSION=`curl -L -s https://dl.k8s.io/release/stable.txt`
+# https://github.com/helm/helm/releases
+ARG HELM_VERSION="v3.12.0"
 
+## AWS CLI v2
 RUN \ 
   case ${TARGETPLATFORM} in \
     "linux/amd64")  DOWNLOAD_ARCH="x86_64"  ;; \
@@ -14,7 +18,8 @@ RUN \
   unzip awscliv2.zip && \
   sudo ./aws/install && \
   rm -rf awscliv2.zip aws
-  
+
+## Terraform
 RUN \
   case ${TARGETPLATFORM} in \
     "linux/amd64")  DOWNLOAD_ARCH="amd64"  ;; \
@@ -25,6 +30,7 @@ RUN \
   sudo mv terraform /usr/bin/ && \
   rm terraform.zip
 
+## Kubectl
 RUN \
   case ${TARGETPLATFORM} in \
     "linux/amd64")  DOWNLOAD_ARCH="amd64"  ;; \
@@ -32,7 +38,20 @@ RUN \
   esac && \
   curl -LO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/${DOWNLOAD_ARCH}/kubectl" && \
   sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl 
-  # kubectl version --client
 
+## Helm
+RUN \
+  case ${TARGETPLATFORM} in \
+    "linux/amd64")  DOWNLOAD_ARCH="amd64"  ;; \
+    "linux/arm64") DOWNLOAD_ARCH="arm64"  ;; \
+  esac && \
+  curl -LO "https://get.helm.sh/helm-${HELM_VERSION}-linux-${DOWNLOAD_ARCH}.tar.gz" && \
+  tar -zxvf helm-${HELM_VERSION}-linux-${DOWNLOAD_ARCH}.tar.gz && \
+  sudo mv linux-${DOWNLOAD_ARCH}/helm /usr/local/bin/helm
 
+## Ansible
+RUN \ 
+  curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
+  python3 get-pip.py --user && \
+  python3 -m pip install --user ansible
 
