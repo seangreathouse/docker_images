@@ -7,7 +7,7 @@ ARG TERRAFORM_VERSION="1.4.6"
 # https://github.com/helm/helm/releases
 ARG HELM_VERSION="v3.12.0"
 
-RUN echo "export KUBECTL_VERSION=`curl -L -s https://dl.k8s.io/release/stable.txt`" >> /envfile
+RUN echo "export KUBECTL_VERSION=`curl -L -s https://dl.k8s.io/release/stable.txt`" >> ./envfile
 
 ## AWS CLI v2
 RUN \ 
@@ -32,7 +32,7 @@ RUN \
   rm terraform.zip
 
 ## Kubectl
-RUN . /envfile; \
+RUN . ./envfile; \
   case ${TARGETPLATFORM} in \
     "linux/amd64")  DOWNLOAD_ARCH="amd64"  ;; \
     "linux/arm64") DOWNLOAD_ARCH="arm64"  ;; \
