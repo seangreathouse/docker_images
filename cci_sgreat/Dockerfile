@@ -56,3 +56,10 @@ RUN \
   python3 get-pip.py --user && \
   python3 -m pip install --user ansible
 
+## Kustomize
+RUN \ 
+  curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash && \
+  sudo mv ./kustomize /usr/local/bin/kustomize
+
+
+
