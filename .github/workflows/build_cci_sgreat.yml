@@ -14,7 +14,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/cci_sgreat  
   DOCKER_FROM: 'cimg/base:current '
-
+ 
 jobs:
   build-and-push-image:
     if: ${{ always() }}
