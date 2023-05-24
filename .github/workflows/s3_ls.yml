@@ -1,32 +1,53 @@
-name: Create s3 bucket with oidc auth
-# https://github.com/aws-actions/configure-aws-credentials#assuming-a-role
+# name: Create s3 bucket with oidc auth
+# # https://github.com/aws-actions/configure-aws-credentials#assuming-a-role
 
-on:
-  # schedule:
-  #   - cron:  '0 17 * * *' 
-  workflow_dispatch:
-  push:
-    branches: ['main']
-    # paths:
-    #   - 'docker_images/cci_sgreat/**'
-    #   - '.github/workflows/build_cci_sgreat.yml'
+# on:
+#   # schedule:
+#   #   - cron:  '0 17 * * *' 
+#   workflow_dispatch:
+#   push:
+#     branches: ['main']
+#     # paths:
+#     #   - 'docker_images/cci_sgreat/**'
+#     #   - '.github/workflows/build_cci_sgreat.yml'
      
-jobs:
-  deploy:
-    name: Upload to Amazon S3
-    runs-on: ubuntu-latest
-    # These permissions are needed to interact with GitHub's OIDC Token endpoint.
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    - name: Configure AWS credentials from Test account
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        role-to-assume: arn:aws:iam::060668767414:role/github_actions_sgreat
-        aws-region: us-west-2
-    - name: Copy files to the test website with the AWS CLI
-      run: |
-        aws s3 ls
+# jobs:
+#   deploy:
+#     name: Upload to Amazon S3
+#     runs-on: ubuntu-latest
+#     # These permissions are needed to interact with GitHub's OIDC Token endpoint.
+#     permissions:
+#       id-token: write
+#       contents: read
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v3
+#     - name: Configure AWS credentials from Test account
+#       uses: aws-actions/configure-aws-credentials@v2
+#       with:
+#         role-to-assume: arn:aws:iam::060668767414:role/github_actions_sgreat
+#         aws-region: us-west-2
+#     - name: Copy files to the test website with the AWS CLI
+#       run: |
+#         aws s3 ls
+
+# {
+# 	"Version": "2012-10-17",
+# 	"Statement": [
+# 		{
+# 			"Effect": "Allow",
+# 			"Principal": {
+# 				"Federated": "arn:aws:iam::060668767414:oidc-provider/token.actions.githubusercontent.com"
+# 			},
+# 			"Action": "sts:AssumeRoleWithWebIdentity",
+# 			"Condition": {
+# 			     "StringLike": {
+#                     "token.actions.githubusercontent.com:sub": "repo:sgreathouse-rgare/action-tf:*"
+# 			     },
+# 				"StringEquals": {
+# 					"token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
+# 				}
+# 			}
+# 		}
+# 	]
+# }
