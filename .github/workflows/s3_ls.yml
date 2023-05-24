@@ -10,7 +10,7 @@ on:
     # paths:
     #   - 'docker_images/cci_sgreat/**'
     #   - '.github/workflows/build_cci_sgreat.yml'
-    
+     
 jobs:
   deploy:
     name: Upload to Amazon S3
