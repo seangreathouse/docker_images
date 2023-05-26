@@ -7,7 +7,7 @@ on:
   push:
     # branches: ${{ github.ref_name }}  ## < this is broken
     paths:
-      - 'docker_images/terraform-aws-cli/**'
+      - 'terraform-aws-cli/**'
       - '.github/workflows/build_terraform-aws-cli.yml'  
 
 env:

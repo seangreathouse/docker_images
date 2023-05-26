@@ -7,7 +7,7 @@ on:
   push:
     # branches: ${{ github.ref_name }} 
     paths:
-      - 'docker_images/apcupsd/**'
+      - 'apcupsd/**'
       - '.github/workflows/build_apcupsd.yml' 
 
 env:

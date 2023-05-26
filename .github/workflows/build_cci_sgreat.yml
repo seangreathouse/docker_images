@@ -7,7 +7,7 @@ on:
   push:
     branches: ['main']
     paths:
-      - 'docker_images/cci_sgreat/**'
+      - 'cci_sgreat/**'
       - '.github/workflows/build_cci_sgreat.yml'
     
 env:
