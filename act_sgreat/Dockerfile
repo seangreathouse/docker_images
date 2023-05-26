@@ -44,6 +44,7 @@ RUN . $HOME/envfile; \
 
 ## Helm
 RUN \
+  cd $HOME && \
   case ${TARGETPLATFORM} in \
     "linux/amd64")  DOWNLOAD_ARCH="amd64"  ;; \
     "linux/arm64") DOWNLOAD_ARCH="arm64"  ;; \
@@ -55,6 +56,7 @@ RUN \
 
 ## Ansible
 RUN \ 
+  cd $HOME && \
   curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
   python3 get-pip.py --user && \
   python3 -m pip install --user ansible
