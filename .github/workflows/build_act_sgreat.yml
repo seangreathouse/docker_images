@@ -1,30 +1,28 @@
-name: Create and publish terraform-aws-cli Docker image
+name: Create and publish custom image for Github Actions
 
 on:
   # schedule:
   #   - cron:  '0 17 * * *' 
   workflow_dispatch:
   push:
-    # branches: ${{ github.ref_name }}  ## < this is broken
+    branches: ['main']
     paths:
-      - 'docker_images/terraform-aws-cli/**'
-      - '.github/workflows/build_terraform-aws-cli.yml'  
-
+      - 'act_sgreat/**'
+      - '.github/workflows/build_act_sgreat.yml'
+    
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/terraform-aws-cli  
-  PROJECT_NAME: terraform-aws-cli  
-  DOCKER_FROM: 'debian:bullseye-slim'
-  GIT_BRANCH: ${{ github.ref_name }}
-
+  IMAGE_NAME: ${{ github.repository }}/act_sgreat  
+  DOCKER_FROM: 'summerwind/actions-runner:latest'
+ 
 jobs:
   build-and-push-image:
     if: ${{ always() }}
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-
+ 
     steps:
       - name: Log in to the Container registry
         uses: docker/login-action@master
@@ -41,30 +39,30 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@master
-
+ 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@master
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            ${{ env.DOCKER_FROM }}
-            ${{ env.GIT_BRANCH }}
-            # ${{ env.APCUPSD_CURRENT_VERSION }}
+            ${{ env.IMAGE_NAME }}
+            # ${{ env.DOCKER_FROM }}
             # set latest tag for main branch
             type=raw,value=latest,enable={{is_default_branch}} 
           labels: |
-            # base_image=${{ env.DOCKER_FROM }}
+            base_image=${{ env.DOCKER_FROM }}
             org.opencontainers.image.url=https://github.com/${{ env.IMAGE_NAME }}
             org.opencontainers.image.source=https://github.com/${{ env.IMAGE_NAME }}
-            # apcupsd_version=${{ env.APCUPSD_CURRENT_VERSION }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@master 
         with:
           platforms: linux/amd64,linux/arm64
-          context: "{{defaultContext}}:terraform-aws-cli"
+          context: "{{defaultContext}}:act_sgreat"
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
- 
+
+
+     

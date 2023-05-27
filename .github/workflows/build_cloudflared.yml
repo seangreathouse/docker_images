@@ -3,13 +3,13 @@ name: Create and publish cloudflared Debian Docker image
 on:
   schedule:
     - cron:  '0 17 * * *' 
-  # workflow_call:
-  # push:
-  #   # branches: ['dev']
-  #   branches: ['main']
-  #   paths:
-  #     - 'docker_images/cloudflared/**'
-  #     - '.github/workflows/build_cloudflared.yml'
+  workflow_call:
+  push:
+    # branches: ['dev']
+    branches: ['main']
+    paths:
+      - 'cloudflared/**'
+      - '.github/workflows/build_cloudflared.yml'
 
 env:
   REGISTRY: ghcr.io
