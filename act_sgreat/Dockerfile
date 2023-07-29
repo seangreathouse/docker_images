@@ -32,7 +32,7 @@ RUN \
   unzip $HOME/terraform.zip && \
   sudo mv $HOME/terraform /usr/bin/ && \
   rm $HOME/terraform.zip
-
+ 
 ## Kubectl
 RUN . $HOME/envfile; \
   case ${TARGETPLATFORM} in \
