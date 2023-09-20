@@ -1,6 +1,8 @@
 # name: Create s3 bucket with oidc auth
 # # https://github.com/aws-actions/configure-aws-credentials#assuming-a-role
 
+echo 'hi'
+
 # on:
 #   # schedule:
 #   #   - cron:  '0 17 * * *' 
