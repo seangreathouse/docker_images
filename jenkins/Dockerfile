@@ -3,11 +3,11 @@ USER root
 
 ARG TARGETPLATFORM
 # https://releases.hashicorp.com/terraform/
-ARG TERRAFORM_VERSION="1.5.3"
-# https://github.com/helm/helm/releases
-ARG HELM_VERSION="v3.12.1"
+ARG TERRAFORM_VERSION="1.5.4"
 
-RUN echo "export KUBECTL_VERSION=`curl -L -s https://dl.k8s.io/release/stable.txt`" >> ./envfile
+RUN cat /etc/issue
+
+RUN apt-get update && apt-get install -y gnupg software-properties-common lsb-release sudo wget vim jq
 
 ## AWS CLI v2
 RUN \ 
