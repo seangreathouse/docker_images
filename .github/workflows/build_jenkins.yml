@@ -12,8 +12,8 @@ on:
     
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/cci_sgreat  
-  DOCKER_FROM: 'cimg/base:current '
+  IMAGE_NAME: ${{ github.repository }}/jenkins  
+  DOCKER_FROM: 'cimg/base:current'
  
 jobs:
   build-and-push-image:
@@ -59,7 +59,7 @@ jobs:
         uses: docker/build-push-action@master 
         with:
           platforms: linux/amd64,linux/arm64
-          context: "{{defaultContext}}:cci_sgreat"
+          context: "{{defaultContext}}:jenkins"
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
