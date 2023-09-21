@@ -7,7 +7,7 @@ ARG TERRAFORM_VERSION="1.5.4"
 
 RUN cat /etc/issue
 
-RUN apt-get update && apt-get install -y gnupg software-properties-common lsb-release sudo wget vim jq docker.io
+RUN apt-get update && apt-get install -y gnupg software-properties-common lsb-release sudo wget vim jq docker.io time
 
 RUN sudo usermod -a -G docker jenkins
 
