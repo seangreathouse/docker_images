@@ -40,3 +40,4 @@ RUN \
 # docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home sgreat/jenkins
 # docker build --progress=plain -t sgreat/jenkins ./
 # docker exec -it eager_swartz bash 
+# docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -v $(which docker):$(which docker) ghcr.io/seangreathouse/docker_images/jenkins
