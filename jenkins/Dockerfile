@@ -8,8 +8,8 @@ ARG TERRAFORM_VERSION="1.5.7"
 RUN cat /etc/issue
 
 RUN apt-get update && apt-get install -y gnupg software-properties-common lsb-release sudo wget vim jq time nodejs npm
-#docker.io
 
+RUN apt-get install -y docker.io
 RUN sudo usermod -a -G docker jenkins
 
 ## AWS CLI v2
