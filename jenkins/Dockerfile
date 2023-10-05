@@ -3,11 +3,12 @@ USER root
 
 ARG TARGETPLATFORM
 # https://releases.hashicorp.com/terraform/
-ARG TERRAFORM_VERSION="1.5.4"
+ARG TERRAFORM_VERSION="1.5.7"
 
 RUN cat /etc/issue
 
-RUN apt-get update && apt-get install -y gnupg software-properties-common lsb-release sudo wget vim jq docker.io time
+RUN apt-get update && apt-get install -y gnupg software-properties-common lsb-release sudo wget vim jq time nodejs npm
+#docker.io
 
 RUN sudo usermod -a -G docker jenkins
 
@@ -32,6 +33,16 @@ RUN \
   unzip terraform.zip && \
   sudo mv terraform /usr/bin/ && \
   rm terraform.zip
+
+RUN git clone --depth=1 https://github.com/tfutils/tfenv.git /usr/local/bin/tfenv
+RUN echo "PATH=$PATH:/usr/local/bin/tfenv/bin/" >> /etc/profile
+
+RUN npm install --global smee-client
+COPY smee.sh /usr/local/bin/smee.sh
+RUN chmod +x /usr/local/bin/smee.sh
+COPY smee.service /etc/systemd/system/smee.service
+RUN systemctl enable smee.service
+
 
 # install aws cli
 # install jq
