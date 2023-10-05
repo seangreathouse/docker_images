@@ -40,12 +40,11 @@ RUN echo "PATH=$PATH:/usr/local/bin/tfenv/bin/" >> /etc/profile
 RUN npm install --global smee-client
 COPY smee.sh /usr/local/bin/smee.sh
 RUN chmod +x /usr/local/bin/smee.sh
-COPY smee.service /etc/systemd/system/smee.service
-RUN systemctl enable smee.service
+RUN ln -s /usr/local/bin/smee.sh /etc/init.d/
 
+# COPY smee.service /etc/systemd/system/smee.service
+# RUN systemctl enable smee.service
 
-# install aws cli
-# install jq
 
 # https://octopus.com/blog/jenkins-docker-install-guide
 # docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home sgreat/jenkins
