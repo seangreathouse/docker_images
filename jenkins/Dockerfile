@@ -43,10 +43,8 @@ RUN chmod +x /usr/local/bin/smee.sh
 
 
 # https://octopus.com/blog/jenkins-docker-install-guide
-# docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home sgreat/jenkins
-# docker build --progress=plain -t sgreat/jenkins ./
-# docker exec -it eager_swartz bash 
-# docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -v $(which docker):$(which docker) ghcr.io/seangreathouse/docker_images/jenkins
 
-# export SMEE_URL=https://smee.io/1234567890
-# docker run --env SMEE_URL=$SMEE_URL -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home ghcr.io/seangreathouse/docker_images/jenkins
+# export SMEE_URL="https://smee.io/1234567890"
+# export SMEE_TOKEN="foo"
+# smee.sh $SMEE_URL $SMEE_TOKEN
+# docker run --env SMEE_URL=$SMEE_URL --env SMEE_TOKEN=$SMEE_TOKEN -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home ghcr.io/seangreathouse/docker_images/jenkins
