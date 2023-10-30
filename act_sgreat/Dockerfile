@@ -3,7 +3,7 @@ FROM summerwind/actions-runner:latest
 
 ARG TARGETPLATFORM
 # https://releases.hashicorp.com/terraform/
-ARG TERRAFORM_VERSION="1.4.6"
+ARG TERRAFORM_VERSION="1.6"
 # https://github.com/helm/helm/releases
 ARG HELM_VERSION="v3.12.0"
 

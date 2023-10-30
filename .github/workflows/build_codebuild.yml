@@ -1,0 +1,68 @@
+name: Create and publish custom image for Github Actions
+
+on:
+  schedule:
+    - cron:  '0 17 * * *' 
+  workflow_dispatch:
+  push:
+    branches: ['main']
+    paths:
+      - 'codebuild/**'
+      - '.github/workflows/build_codebuild.yml'
+    
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}/codebuild  
+  DOCKER_FROM: 'ubuntu:focal'
+ 
+jobs:
+  build-and-push-image:
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+ 
+    steps:
+      - name: Log in to the Container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@master
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@master
+
+      - name: Checkout repository
+        uses: actions/checkout@master
+ 
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@master
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            ${{ env.IMAGE_NAME }}
+            # ${{ env.DOCKER_FROM }}
+            # set latest tag for main branch
+            type=raw,value=latest,enable={{is_default_branch}} 
+          labels: |
+            base_image=${{ env.DOCKER_FROM }}
+            org.opencontainers.image.url=https://github.com/${{ env.IMAGE_NAME }}
+            org.opencontainers.image.source=https://github.com/${{ env.IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@master 
+        with:
+          platforms: linux/amd64,linux/arm64
+          context: "{{defaultContext}}:codebuild"
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+
+     
