@@ -1,4 +1,4 @@
-name: Create and publish custom image for Github Actions
+name: Create and publish custom image for AWS CodeBuild
 
 on:
   schedule:
