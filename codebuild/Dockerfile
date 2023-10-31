@@ -1,11 +1,12 @@
-FROM ubuntu:focal
+FROM debian:bookworm-slim
+# FROM ubuntu:focal
 #Ubuntu 22.04.2 LTS (Focal Fossa)
 
 ARG TARGETPLATFORM
 # https://releases.hashicorp.com/terraform/
 ARG TERRAFORM_VERSION="1.6.2"
 
-RUN apt-get update && apt-get install -y sudo wget vim jq time curl unzip
+RUN apt-get update && apt-get upgrade && apt-get install -y sudo wget vim jq time curl unzip git
 
 
 ## AWS CLI v2
