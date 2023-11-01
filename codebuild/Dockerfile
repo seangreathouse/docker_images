@@ -22,7 +22,7 @@ RUN \
   git clone --depth=1 https://github.com/tfutils/tfenv.git /usr/local/bin/.tfenv && \
   ln -s /usr/local/bin/.tfenv/bin/* /usr/local/bin/ && \
   echo 'trust-tfenv: yes' > /usr/local/bin/.tfenv/use-gpgv && \
-  TERRAFORM_VERSION=`curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform |jq -r .current_version` && \
+  set -o pipefail && TERRAFORM_VERSION=`curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform |jq -r .current_version` && \
   tfenv use ${TERRAFORM_VERSION} 
 
 
