@@ -9,7 +9,7 @@ on:
     paths:
       - 'codebuild/**'
       - '.github/workflows/build_codebuild.yml'
-    
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/codebuild  
