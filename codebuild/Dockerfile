@@ -36,7 +36,10 @@ RUN \
  
 RUN \
   git clone --depth=1 https://github.com/tfutils/tfenv.git /usr/local/bin/tfenv && \
-  echo "PATH=$PATH:/usr/local/bin/tfenv/bin/" >> /etc/profile && \
+  echo "PATH=$PATH:/usr/local/bin/tfenv/bin/" >> /etc/profile 
+  
+RUN \
+  source /etc/profile && \
   terraform --version && \
   tfenv use 1.5.0 && \
   terraform --version
