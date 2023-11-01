@@ -5,7 +5,7 @@ on:
     - cron:  '0 17 * * *' 
   workflow_dispatch:
   push:
-    branches: ['master']
+    branches: ['main']
     paths:
       - 'codebuild/**'
       - '.github/workflows/build_codebuild.yml'
