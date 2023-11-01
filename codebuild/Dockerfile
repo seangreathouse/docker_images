@@ -36,5 +36,5 @@ RUN \
  
 RUN \
   git clone --depth=1 https://github.com/tfutils/tfenv.git /usr/local/bin/.tfenv && \
-  ln -s /usr/local/bin/.tfenv/* /usr/local/bin/
+  ln -s /usr/local/bin/.tfenv/bin/* /usr/local/bin/
 
