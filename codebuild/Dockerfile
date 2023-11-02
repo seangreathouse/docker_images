@@ -2,7 +2,7 @@ FROM debian:bookworm-slim
 
 ARG TARGETPLATFORM
 
-RUN apt-get update && apt-get upgrade && \
+RUN apt-get update && apt-get upgrade && apt-get dist-upgrade \
     apt-get install -y sudo wget vim jq time curl unzip git && \
     rm -rf /var/lib/apt/lists/*
 
