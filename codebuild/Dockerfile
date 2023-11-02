@@ -13,11 +13,12 @@ RUN \
     "linux/arm64") DOWNLOAD_ARCH="aarch64"  ;; \
   esac && \
   cd $HOME && \
-  curl "https://awscli.amazonaws.com/awscli-exe-linux-${DOWNLOAD_ARCH}.zip" -o "$HOME/awscliv2.zip" && \
+  curl -s "https://awscli.amazonaws.com/awscli-exe-linux-${DOWNLOAD_ARCH}.zip" -o "$HOME/awscliv2.zip" && \
   unzip $HOME/awscliv2.zip && \
   sudo $HOME/aws/install && \
   rm -rf $HOME/awscliv2.zip aws
- 
+
+# Terraform / tfenv 
 RUN \
   git clone --depth=1 https://github.com/tfutils/tfenv.git /usr/local/bin/.tfenv && \
   ln -s /usr/local/bin/.tfenv/bin/* /usr/local/bin/ && \
