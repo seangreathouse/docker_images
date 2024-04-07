@@ -13,7 +13,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/apcupsd  
-  DOCKER_FROM: 'alpine'
+  DOCKER_FROM: 'alpine' 
   GIT_BRANCH: ${{ github.ref_name }}
 
 jobs:
