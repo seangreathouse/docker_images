@@ -4,8 +4,8 @@ on:
   schedule:
     - cron:  '17 17 * * *' 
   workflow_dispatch:
-    branches: ['main']
-    # branches: ${{ github.ref_name }} 
+    # branches: ['main']
+    branches: ${{ github.ref_name }} 
     paths:
       - 'apcupsd/**'
       - '.github/workflows/build_apcupsd.yml' 
