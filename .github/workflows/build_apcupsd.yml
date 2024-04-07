@@ -101,7 +101,7 @@ jobs:
         run: |
           echo Current version: ${{ env.APCUPSD_CURRENT_VERSION }}
           echo Image version: ${{ env.APCUPSD_IMAGE_VERSION }}
-          echo Doecker from: ${{ env.DOCKER_FROM }}
+          echo Docker from: ${{ env.DOCKER_FROM }}
 
       - name: Log in to the Container registry
         uses: docker/login-action@master
