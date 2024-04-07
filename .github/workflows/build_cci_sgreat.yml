@@ -1,8 +1,8 @@
 name: Create and publish custom image for CircleCi
 
 on:
-  schedule:
-    - cron:  '0 17 * * *' 
+  # schedule:
+  #   - cron:  '0 17 * * *' 
   workflow_dispatch:
   push:
     branches: ['main']

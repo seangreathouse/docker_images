@@ -2,7 +2,7 @@ name: Create and publish cloudflared Debian Docker image
 
 on:
   schedule:
-    - cron:  '0 17 * * *' 
+    - cron:  '17 17 * * *' 
   workflow_call:
   push:
     # branches: ['dev']

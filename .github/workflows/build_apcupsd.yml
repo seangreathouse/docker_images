@@ -1,10 +1,10 @@
 name: Create and publish apcupsd Alpine Docker image
 
 on:
-  # schedule:
-  #   - cron:  '0 17 * * *' 
+  schedule:
+    - cron:  '17 17 * * *' 
   workflow_dispatch:
-  push:
+    branches: ['main']
     # branches: ${{ github.ref_name }} 
     paths:
       - 'apcupsd/**'
