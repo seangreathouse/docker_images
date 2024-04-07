@@ -9,6 +9,13 @@ on:
     paths:
       - 'apcupsd/**'
       - '.github/workflows/build_apcupsd.yml' 
+    workflow_call:
+  push:
+    # branches: ['dev']
+    branches: ['main']
+    paths:
+      - 'apcupsd/**'
+      - '.github/workflows/build_apcupsd.yml'
 
 env:
   REGISTRY: ghcr.io
