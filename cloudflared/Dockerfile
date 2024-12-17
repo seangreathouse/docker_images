@@ -27,3 +27,4 @@ ENTRYPOINT /usr/bin/cloudflared --pidfile /var/run/$name.pid --config /etc/cloud
 # docker image tag cloudflared:latest ghcr.io/seangreathouse/cloudflared
 # LABEL org.opencontainers.image.source https://github.com/OWNER/REPO
 # docker run --restart always -d -v /etc/cloudflared/sgreat_382:/etc/cloudflared --network host --name sgreat_382_ghb ghcr.io/seangreathouse/cloudflared:main
+ 
