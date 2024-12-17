@@ -7,3 +7,4 @@ LABEL org.opencontainers.image.source https://github.com/seangreathouse/docker_i
 LABEL docker_from alpine:latest
 
 ENTRYPOINT [ "/sbin/apcupsd", "-b" ]
+
