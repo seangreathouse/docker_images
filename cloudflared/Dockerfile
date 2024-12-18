@@ -4,9 +4,13 @@ FROM debian:bullseye-slim
 # ARG CLOUDFLARED_ARCH_ARG 
 ARG TARGETPLATFORM
 
-RUN apt-get update
-RUN apt-get upgrade -y
-RUN apt-get install -y curl procps apt-utils
+RUN apt-get update && \
+  apt-get upgrade -y && \
+  apt-get install -y curl procps apt-utils
+  
+RUN rm -rf /var/lib/apt/lists/* && \
+  apt-get clean && \
+  apt-get autoremove -y
 
 RUN \ 
   case ${TARGETPLATFORM} in \
