@@ -15,7 +15,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/cloudflared  
   DOCKER_FROM: 'debian-bullseye-slim'
-
+ 
 jobs:
   check-latest-version:
     runs-on: ubuntu-latest
