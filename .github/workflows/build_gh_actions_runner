@@ -1,4 +1,4 @@
-name: Create and publish cloudflared Debian Docker image
+name: Create and publish GitHub Actions runner Debian Docker image
 
 on:
   schedule:
@@ -8,9 +8,9 @@ on:
   push:
     branches: ['main']
     paths:
-      - 'cloudflared/**'
+      - 'gh_actions_runner/**'
       - '.github/workflows/build_gh_actions_runner.yml'
- 
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/gh_actions_runner
