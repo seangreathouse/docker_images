@@ -1,4 +1,5 @@
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
+# FROM debian:bullseye-slim
 # ARG CLOUDFLARED_URL_ARG
 # ARG CLOUDFLARED_VERSION_ARG
 # ARG CLOUDFLARED_ARCH_ARG 
