@@ -9,7 +9,7 @@ on:
     paths:
       - 'cloudflared/**'
       - '.github/workflows/build_cloudflared.yml'
- 
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/cloudflared  
