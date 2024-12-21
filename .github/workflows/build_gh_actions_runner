@@ -13,7 +13,7 @@
  
 # env:
 #   REGISTRY: ghcr.io
-#   IMAGE_NAME: ${{ github.repository }}/cloudflared  
+#   IMAGE_NAME: ${{ github.repository }}/gh_actions_runner
 #   DOCKER_FROM: 'debian-bookworm-slim'
  
 # jobs:
@@ -23,21 +23,21 @@
 #       contents: read
 #       packages: write
 #     steps:
-#       - name: Get cloudflared current version
-#         id: get_CLOUDFLARED_CURRENT_VERSION
+#       - name: Get gh actions runner current version
+#         id: get_GH_ACTIONS_RUNNER_CURRENT_VERSION
 #         run: |
-#           echo CLOUDFLARED_CURRENT_VERSION=$(curl -s --head https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb |egrep 'location:' |egrep -o [0-9]{4}\.[0-9]+\.[0-9]+) >> $GITHUB_ENV
+#           echo GH_ACTIONS_RUNNER_CURRENT_VERSION=$(curl -s https://api.github.com/repos/actions/runner/releases/latest | jq -r .tag_name) >> $GITHUB_ENV
 
-#       - name: Echo cloudflared current version
-#         id: echo_CLOUDFLARED_CURRENT_VERSION
-#         run: echo ${{ env.CLOUDFLARED_CURRENT_VERSION }}
+#       - name: Echo gh actions runner current version
+#         id: echo_GH_ACTIONS_RUNNER_CURRENT_VERSION
+#         run: echo ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION }}
 #     outputs:
-#       CLOUDFLARED_CURRENT_VERSION: ${{ env.CLOUDFLARED_CURRENT_VERSION }}
+#       CLOUDFLARED_CURRENT_VERSION: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION }}
 
 #   check-image-version:
 #     if: always()
 #     needs: check-latest-version
-#     runs-on: ubuntu-latest
+#     runs-on: ubuntu-24.04
 #     permissions:
 #       contents: read
 #       packages: write
