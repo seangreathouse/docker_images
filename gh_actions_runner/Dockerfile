@@ -1,5 +1,6 @@
 # base
-FROM ubuntu:18.04
+FROM debian:bookworm-slim
+# FROM ubuntu:18.04
 
 # set the github runner version
 ARG RUNNER_VERSION="2.283.3"
