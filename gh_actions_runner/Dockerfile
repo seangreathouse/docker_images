@@ -1,6 +1,7 @@
 # base
 # FROM debian:bookworm-slim
-FROM ubuntu:24.04
+# FROM ubuntu:24.04
+FROM ubuntu:22.04
 
 # set the github runner version
 ARG RUNNER_VERSION="2.283.3"
@@ -20,7 +21,6 @@ RUN cd /home/docker && mkdir actions-runner && cd actions-runner \
 
 ## Debug
 RUN ls -la /home/docker/actions-runner/bin/installdependencies.sh
-
 
 # install some additional dependencies
 RUN chown -R docker ~docker && /home/docker/actions-runner/bin/installdependencies.sh

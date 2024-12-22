@@ -1,4 +1,4 @@
-name: Create and publish GitHub Actions runner ubuntu:24.04 Docker image
+name: Create and publish GitHub Actions runner ubuntu:22.04 Docker image
 
 on:
   schedule:
@@ -14,7 +14,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/gh_actions_runner
-  DOCKER_FROM: 'ubuntu:24.04'
+  DOCKER_FROM: 'ubuntu:22.04'
   # DOCKER_FROM: 'debian-bookworm-slim'
  
 jobs:
