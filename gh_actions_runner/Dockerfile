@@ -6,6 +6,10 @@ FROM debian:bookworm-slim
 ARG GH_ACTIONS_RUNNER_CURRENT_VERSION
 ARG TARGETPLATFORM
 
+# debug
+RUN echo "GH_ACTIONS_RUNNER_CURRENT_VERSION: ${GH_ACTIONS_RUNNER_CURRENT_VERSION}"
+RUN echo "TARGETPLATFORM: ${TARGETPLATFORM}"
+
 # update the base packages and add a non-sudo user
 RUN apt-get update -y && apt-get upgrade -y && useradd -m docker
 
