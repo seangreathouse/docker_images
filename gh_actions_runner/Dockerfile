@@ -2,12 +2,14 @@
 FROM debian:bookworm-slim
 
 # set the github runner version
-# ARG GH_ACTIONS_RUNNER_CURRENT_VERSION="2.321.0"
-ARG GH_ACTIONS_RUNNER_CURRENT_VERSION
+# ARG GH_ACTIONS_RUNNER_VERSION="2.321.0"
+# ARG GH_ACTIONS_RUNNER_VERSION
 ARG TARGETPLATFORM
+ARG GH_ACTIONS_RUNNER_VERSION
+ENV GH_ACTIONS_RUNNER_VERSION ${GH_ACTIONS_RUNNER_VERSION}
 
 # debug
-RUN echo "GH_ACTIONS_RUNNER_CURRENT_VERSION: ${GH_ACTIONS_RUNNER_CURRENT_VERSION}"
+RUN echo "GH_ACTIONS_RUNNER_VERSION: ${GH_ACTIONS_RUNNER_VERSION}"
 RUN echo "TARGETPLATFORM: ${TARGETPLATFORM}"
 
 # update the base packages and add a non-sudo user
@@ -20,19 +22,19 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
 
 # cd into the user directory, download and unzip the github actions runner
 # RUN cd /home/docker && mkdir actions-runner && cd actions-runner \
-#     && curl -O -L https://github.com/actions/runner/releases/download/v${GH_ACTIONS_RUNNER_CURRENT_VERSION}/actions-runner-linux-x64-${GH_ACTIONS_RUNNER_CURRENT_VERSION}.tar.gz \
-#     && tar xzf ./actions-runner-linux-x64-${GH_ACTIONS_RUNNER_CURRENT_VERSION}.tar.gz
+#     && curl -O -L https://github.com/actions/runner/releases/download/v${GH_ACTIONS_RUNNER_VERSION}/actions-runner-linux-x64-${GH_ACTIONS_RUNNER_VERSION}.tar.gz \
+#     && tar xzf ./actions-runner-linux-x64-${GH_ACTIONS_RUNNER_VERSION}.tar.gz
 
 RUN \ 
     case ${TARGETPLATFORM} in \
       "linux/amd64")  DOWNLOAD_ARCH="x64"  ;; \
       "linux/arm64") DOWNLOAD_ARCH="arm64"  ;; \
     esac && \
-    echo "https://github.com/actions/runner/releases/download/v${GH_ACTIONS_RUNNER_CURRENT_VERSION}/actions-runner-linux-${DOWNLOAD_ARCH}-${GH_ACTIONS_RUNNER_CURRENT_VERSION}.tar.gz && \
-    tar xzf ./actions-runner-linux-${DOWNLOAD_ARCH}-${GH_ACTIONS_RUNNER_CURRENT_VERSION}.tar.gz" && \ 
+    echo "https://github.com/actions/runner/releases/download/v${GH_ACTIONS_RUNNER_VERSION}/actions-runner-linux-${DOWNLOAD_ARCH}-${GH_ACTIONS_RUNNER_VERSION}.tar.gz && \
+    tar xzf ./actions-runner-linux-${DOWNLOAD_ARCH}-${GH_ACTIONS_RUNNER_VERSION}.tar.gz" && \ 
     cd /home/docker && mkdir actions-runner && cd actions-runner && \
-    curl -O -L https://github.com/actions/runner/releases/download/v${GH_ACTIONS_RUNNER_CURRENT_VERSION}/actions-runner-linux-${DOWNLOAD_ARCH}-${GH_ACTIONS_RUNNER_CURRENT_VERSION}.tar.gz && \
-    tar xzf ./actions-runner-linux-${DOWNLOAD_ARCH}-${GH_ACTIONS_RUNNER_CURRENT_VERSION}.tar.gz
+    curl -O -L https://github.com/actions/runner/releases/download/v${GH_ACTIONS_RUNNER_VERSION}/actions-runner-linux-${DOWNLOAD_ARCH}-${GH_ACTIONS_RUNNER_VERSION}.tar.gz && \
+    tar xzf ./actions-runner-linux-${DOWNLOAD_ARCH}-${GH_ACTIONS_RUNNER_VERSION}.tar.gz
 
 # install some additional dependencies
 RUN chown -R docker ~docker && /home/docker/actions-runner/bin/installdependencies.sh
