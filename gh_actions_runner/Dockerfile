@@ -19,9 +19,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     curl jq build-essential libssl-dev libffi-dev python3 python3-venv python3-dev python3-pip
 
 # cd into the user directory, download and unzip the github actions runner
-RUN cd /home/docker && mkdir actions-runner && cd actions-runner \
-    && curl -O -L https://github.com/actions/runner/releases/download/v${GH_ACTIONS_RUNNER_VERSION}/actions-runner-linux-x64-${GH_ACTIONS_RUNNER_VERSION}.tar.gz \
-    && tar xzf ./actions-runner-linux-x64-${GH_ACTIONS_RUNNER_VERSION}.tar.gz
+# RUN cd /home/docker && mkdir actions-runner && cd actions-runner \
+#     && curl -O -L https://github.com/actions/runner/releases/download/v${GH_ACTIONS_RUNNER_CURRENT_VERSION}/actions-runner-linux-x64-${GH_ACTIONS_RUNNER_CURRENT_VERSION}.tar.gz \
+#     && tar xzf ./actions-runner-linux-x64-${GH_ACTIONS_RUNNER_CURRENT_VERSION}.tar.gz
 
 RUN \ 
     case ${TARGETPLATFORM} in \

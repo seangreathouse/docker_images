@@ -1,5 +1,5 @@
 name: Create and publish GitHub Actions runner debian:bookworm-slim Docker image
-
+ 
 on:
   schedule:
     - cron:  '17 17 * * *' 
