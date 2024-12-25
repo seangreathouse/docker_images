@@ -1,16 +1,9 @@
 # base
 FROM debian:bookworm-slim
 
-# set the github runner version
-# ARG GH_ACTIONS_RUNNER_VERSION="2.321.0"
-# ARG GH_ACTIONS_RUNNER_VERSION
 ARG TARGETPLATFORM
 ARG GH_ACTIONS_RUNNER_VERSION
-ENV GH_ACTIONS_RUNNER_VERSION ${GH_ACTIONS_RUNNER_VERSION}
-
-# debug
-RUN echo "GH_ACTIONS_RUNNER_VERSION: ${GH_ACTIONS_RUNNER_VERSION}"
-RUN echo "TARGETPLATFORM: ${TARGETPLATFORM}"
+ENV GH_ACTIONS_RUNNER_VERSION=${GH_ACTIONS_RUNNER_VERSION}
 
 # update the base packages and add a non-sudo user
 RUN apt-get update -y && apt-get upgrade -y && useradd -m docker
@@ -19,11 +12,6 @@ RUN apt-get update -y && apt-get upgrade -y && useradd -m docker
 # add additional packages as necessary
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     curl jq build-essential libssl-dev libffi-dev python3 python3-venv python3-dev python3-pip
-
-# cd into the user directory, download and unzip the github actions runner
-# RUN cd /home/docker && mkdir actions-runner && cd actions-runner \
-#     && curl -O -L https://github.com/actions/runner/releases/download/v${GH_ACTIONS_RUNNER_VERSION}/actions-runner-linux-x64-${GH_ACTIONS_RUNNER_VERSION}.tar.gz \
-#     && tar xzf ./actions-runner-linux-x64-${GH_ACTIONS_RUNNER_VERSION}.tar.gz
 
 RUN \ 
     case ${TARGETPLATFORM} in \

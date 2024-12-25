@@ -137,12 +137,3 @@ jobs:
           build-args: |
               GH_ACTIONS_RUNNER_VERSION=${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION }}
 
-      # - name: Build and push Docker image
-      #   uses: docker/build-push-action@master 
-      #   if: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION != env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
-      #   with:
-      #     platforms: linux/amd64,linux/arm64
-      #     context: "{{defaultContext}}:gh_actions_runner"
-      #     push: true
-      #     tags: ${{ steps.meta.outputs.tags }}
-      #     labels: ${{ steps.meta.outputs.labels }}
