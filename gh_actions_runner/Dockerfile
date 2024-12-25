@@ -28,6 +28,8 @@ RUN \
       "linux/amd64")  DOWNLOAD_ARCH="x64"  ;; \
       "linux/arm64") DOWNLOAD_ARCH="arm64"  ;; \
     esac && \
+    echo "https://github.com/actions/runner/releases/download/v${GH_ACTIONS_RUNNER_CURRENT_VERSION}/actions-runner-linux-${DOWNLOAD_ARCH}-${GH_ACTIONS_RUNNER_CURRENT_VERSION}.tar.gz && \
+    tar xzf ./actions-runner-linux-${DOWNLOAD_ARCH}-${GH_ACTIONS_RUNNER_CURRENT_VERSION}.tar.gz" && \ 
     cd /home/docker && mkdir actions-runner && cd actions-runner && \
     curl -O -L https://github.com/actions/runner/releases/download/v${GH_ACTIONS_RUNNER_CURRENT_VERSION}/actions-runner-linux-${DOWNLOAD_ARCH}-${GH_ACTIONS_RUNNER_CURRENT_VERSION}.tar.gz && \
     tar xzf ./actions-runner-linux-${DOWNLOAD_ARCH}-${GH_ACTIONS_RUNNER_CURRENT_VERSION}.tar.gz
