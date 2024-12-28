@@ -14,7 +14,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/gh_actions_runner
-  DOCKER_FROM: 'debian-bookworm-slim'
+  DOCKER_FROM: 'debian:bookworm-slim'
  
 jobs:
   check-latest-version:
