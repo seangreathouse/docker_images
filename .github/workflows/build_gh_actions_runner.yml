@@ -1,5 +1,5 @@
+## https://testdriven.io/blog/github-actions-docker/
 name: Create and publish GitHub Actions runner debian:bookworm-slim Docker image
-
 on:
   schedule:
     - cron:  '17 17 * * *' 
@@ -90,7 +90,7 @@ jobs:
 
       - name: Log in to the Container registry
         uses: docker/login-action@master
-        if: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION != env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
+        # if: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION != env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -98,20 +98,20 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@master
-        if: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION != env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
+        # if: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION != env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
         
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@master
-        if: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION != env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
+        # if: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION != env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
 
       - name: Checkout repository
         uses: actions/checkout@master
-        if: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION != env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
+        # if: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION != env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@master
-        if: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION != env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
+        # if: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION != env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
@@ -127,7 +127,7 @@ jobs:
 
       - name: Build and push Docker image
         uses: docker/build-push-action@master 
-        if: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION != env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
+        # if: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION != env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
         with:
           platforms: linux/amd64,linux/arm64
           context: "{{defaultContext}}:gh_actions_runner"
