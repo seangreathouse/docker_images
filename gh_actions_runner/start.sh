@@ -12,7 +12,6 @@ REG_TOKEN=$(curl -L \
 
 cd /home/docker/actions-runner
 
-# ./config.sh --url https://github.com/${ORGANIZATION}/docker_images --token ${REG_TOKEN}
 ./config.sh --url https://github.com/${ORGANIZATION} --token ${REG_TOKEN}
 cleanup() {
     echo "Removing runner..."

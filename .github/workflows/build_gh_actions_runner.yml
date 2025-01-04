@@ -9,8 +9,8 @@ on:
     branches: ['main']
     paths:
       - 'gh_actions_runner/**'
-      - '.github/workflows/build_gh_actions_runner.yml'
- 
+      - '.github/workflows/build_gh_actions_runner.yml' 
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/gh_actions_runner
