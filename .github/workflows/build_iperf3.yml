@@ -1,0 +1,122 @@
+## https://testdriven.io/blog/github-actions-docker/
+name: Create and publish GitHub Actions runner debian:bookworm-slim Docker image
+on:
+  schedule:
+    - cron:  '17 17 * * *' 
+  workflow_call:
+  workflow_dispatch:
+  push:
+    branches: ['main']
+    paths:
+      - 'iperf3/**'
+      - '.github/workflows/iperf3.yml' 
+ 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}/iperf3
+  DOCKER_FROM: 'alpine:latest'
+
+jobs:
+  # check-image-version:
+  #   if: always()
+  #   needs: check-latest-version
+  #   runs-on: ubuntu-24.04
+  #   permissions:
+  #     contents: read
+  #     packages: write
+
+  #   steps:
+  #     - name: Log in to the Container registry
+  #       uses: docker/login-action@master
+  #       with:
+  #         registry: ${{ env.REGISTRY }}
+  #         username: ${{ github.actor }}
+  #         password: ${{ secrets.GITHUB_TOKEN }}
+
+  #     - name: Pull gh actions runner image
+  #       id: gh_actions_runner_image_pull
+  #       run: |
+  #         docker pull ghcr.io/${{ env.IMAGE_NAME }}
+
+  #     - name: Get image gh actions runner version
+  #       id: GH_ACTIONS_RUNNER_IMAGE_VERSION
+  #       run: |
+  #         echo GH_ACTIONS_RUNNER_IMAGE_VERSION=$(docker inspect ghcr.io/${{ env.IMAGE_NAME }} |egrep gh_actions_runner_version | cut -d '"' -f 4) >> $GITHUB_ENV
+
+  #     - name: Echo gh actions runner image version
+  #       id: echo_GH_ACTIONS_RUNNER_IMAGE_VERSION
+  #       run: echo ${{ env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
+
+  #   outputs:
+  #     GH_ACTIONS_RUNNER_IMAGE_VERSION: ${{ env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
+
+  build-and-push-image:
+    if: ${{ always() }}
+    # needs: [check-latest-version, check-image-version]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # - name: Set gh actions runner versions
+      #   id: set-local-env
+      #   run: |
+      #     echo GH_ACTIONS_RUNNER_CURRENT_VERSION=${{ needs.check-latest-version.outputs.GH_ACTIONS_RUNNER_CURRENT_VERSION }} >> $GITHUB_ENV
+      #     echo GH_ACTIONS_RUNNER_IMAGE_VERSION=${{ needs.check-image-version.outputs.GH_ACTIONS_RUNNER_IMAGE_VERSION }} >> $GITHUB_ENV
+
+      # - name: Echo gh actions runner versions
+      #   id: echo-gh-actions-runner-versions
+      #   run: |
+      #     echo Current version: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION }}
+      #     echo Image version: ${{ env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@master
+        # if: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION != env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@master
+        # if: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION != env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@master
+        # if: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION != env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
+
+      - name: Checkout repository
+        uses: actions/checkout@master
+        # if: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION != env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@master
+        # if: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION != env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            # ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION }}
+            ${{ env.DOCKER_FROM }}
+            # set latest tag for main branch
+            type=raw,value=latest,enable={{is_default_branch}} 
+          labels: |
+            # gh_actions_runner_version=${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION }}
+            base_image=${{ env.DOCKER_FROM }}
+            org.opencontainers.image.url=https://github.com/${{ env.IMAGE_NAME }}
+            org.opencontainers.image.source=https://github.com/${{ env.IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@master 
+        # if: ${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION != env.GH_ACTIONS_RUNNER_IMAGE_VERSION }}
+        with:
+          platforms: linux/amd64,linux/arm64
+          context: "{{defaultContext}}:iperf3"
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # build-args: |
+          #     GH_ACTIONS_RUNNER_VERSION=${{ env.GH_ACTIONS_RUNNER_CURRENT_VERSION }}
+
