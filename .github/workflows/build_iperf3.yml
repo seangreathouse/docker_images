@@ -1,4 +1,4 @@
-## https://testdriven.io/blog/github-actions-docker/
+## https://github.com/michellabbe/docker-iperf3
 name: Create and publish GitHub Actions runner debian:bookworm-slim Docker image
 on:
   schedule:
